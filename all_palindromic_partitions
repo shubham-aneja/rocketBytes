@@ -1,0 +1,68 @@
+
+function getPallindromicSubStr(str) {
+    let resultantStrings = [str];
+    const allPossibleIndicesObj = getIndicesOfMulOccurances(str);
+    for (let k in allPossibleIndicesObj) {
+        const allPossibleIndices = allPossibleIndicesObj[k];
+        let pallsArrays = getPallsSubStrSubArrays(str, allPossibleIndices);
+        pallsArrays = pallsArrays.map(s=>getResultantString(str, s));
+        resultantStrings = resultantStrings.concat(pallsArrays);
+    }
+    
+    log('resultantStrings are...', resultantStrings);
+}
+
+function getIndicesOfMulOccurances(str) {
+    var strTraverse = {};
+    var strMultiChars = {};
+    for (let index = 0; index < str.length; index++) {
+        const element = str[index];
+        if (strTraverse[element]) {
+            strTraverse[element].push(index);
+            strMultiChars[element] = strTraverse[element];
+        } else {
+            strTraverse[element] = [index];
+        }
+    }
+    return strMultiChars;
+}
+
+function isPal(str) {
+    for (let i = 0; i < Math.floor(str.length / 2); i++) {
+        if (str[i] !== str[str.length - i - 1]) {
+            return false;
+        }
+    }
+    return true
+}
+
+function getPossibleSubArrays(array) {
+
+    var result = [];
+    for (let i = 0; i < array.length - 1; i++) {
+        for (let j = i + 1; j < array.length; j++) {
+            result.push([array[i], array[j]]);
+        }
+    }
+    return result;
+}
+
+
+function getPallsSubStrSubArrays(str, array) {
+
+    const allSubArrays = getPossibleSubArrays(array);
+    const retArrays = allSubArrays.filter(subArray => isPal(str.substring(subArray[0], subArray[1] + 1)))
+
+    return retArrays;
+}
+
+function getResultantString(str, array) {
+    var part1 = str.substring(0, array[0]);
+    var part2 = `[${str.substring(array[0], array[1] + 1)}]`;
+    var part3 = str.substring(array[1]+1);
+    return part1 + part2 + part3
+
+}
+function log() {
+    console.log.apply(console, arguments);
+}
